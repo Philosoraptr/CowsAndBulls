@@ -54,9 +54,6 @@ public class GameController : MonoBehaviour {
 
 	public void CheckGuess(int[] guess){
 		ResetGame();
-		resultsString = "";
-		bullCounter = 0;
-		cowCounter = 0;
 		for(int i = 0; i < guess.Length; i++){
 			for(int j = 0; j < code.Length; j++){
 				if(guess[i] == code[j]){
@@ -80,15 +77,20 @@ public class GameController : MonoBehaviour {
 		}
 		cowResult.TrimEnd(' ');
 		for(int i = 0; i < guess.Length; i++){
-			resultsString = resultsString + guess[i].ToString();
+			resultsString += guess[i].ToString();
 		}
 		resultsString = resultsString + " | " + cowResult + "\n";
 		resultsText.text += resultsString;
-
+		if(cowResult == "Bull Bull Bull Bull"){
+			resultsText.text += " You win!!"
+		}
 	}
 
 	void ResetGame(){
 		cowResult = "";
+		resultsString = "";
+		bullCounter = 0;
+		cowCounter = 0;
 	}
 }
 
