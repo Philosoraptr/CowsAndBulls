@@ -11,7 +11,7 @@ public class ButtonScript : MonoBehaviour {
 		if(value < 9){
 			value += 1;
 		}
-		guessText.GetComponent<Text>().text = value.ToString();
+		guessText.text = value.ToString();
 	}
 
 	public void DecreaseValue(){
@@ -20,6 +20,6 @@ public class ButtonScript : MonoBehaviour {
 		if(value > 0){
 			value -= 1;
 		}
-		guessText.GetComponent<Text>().text = value.ToString();
+		guessText.text = value.ToString();
 	}
 }

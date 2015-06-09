@@ -3,6 +3,15 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
+	public Button upBtn1;
+	public Button upBtn2;
+	public Button upBtn3;
+	public Button upBtn4;
+	public Button downBtn1;
+	public Button downBtn2;
+	public Button downBtn3;
+	public Button downBtn4;
+	public Button submitGuessBtn;
 	public Text digit1;
 	public Text digit2;
 	public Text digit3;
@@ -15,6 +24,7 @@ public class GameController : MonoBehaviour {
 	private int cowCounter;
 	private string cowResult;
 	private string resultsString;
+	int zero = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -27,6 +37,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void GenerateCode(){
+		ResetVariables();
 		ResetGame();
 		for(int i = 0; i < code.Length; i++){
 			code[i] = GenerateUniqueRandomInt(0, 10, code);
@@ -53,7 +64,17 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void CheckGuess(int[] guess){
-		ResetGame();
+		ResetVariables();
+		for(int i = 0; i < guess.Length; i++){
+			for(int j = 0; j < guess.Length; j++){
+				if(guess[i] == guess[j]){
+					if(i != j){
+						Debug.Log("You cannot submit the same number twice.");
+						return;
+					}
+				}
+			}
+		}
 		for(int i = 0; i < guess.Length; i++){
 			for(int j = 0; j < code.Length; j++){
 				if(guess[i] == code[j]){
@@ -75,22 +96,58 @@ public class GameController : MonoBehaviour {
 				cowResult = cowResult + "Cow ";	
 			}
 		}
-		cowResult.TrimEnd(' ');
+//		doesn't currently work
+//		cowResult.TrimEnd(' ');
 		for(int i = 0; i < guess.Length; i++){
 			resultsString += guess[i].ToString();
 		}
-		resultsString = resultsString + " | " + cowResult + "\n";
-		resultsText.text += resultsString;
-		if(cowResult == "Bull Bull Bull Bull"){
-			resultsText.text += " You win!!"
+		if(cowResult == "Bull Bull Bull Bull "){
+			resultsString = resultsString + " | " + cowResult + "You Win!!";
+			DisableButtons();
+		} else {
+			resultsString = resultsString + " | " + cowResult + "\n";
 		}
+		resultsText.text += resultsString;
 	}
 
-	void ResetGame(){
+	void ResetVariables(){
 		cowResult = "";
 		resultsString = "";
 		bullCounter = 0;
 		cowCounter = 0;
+	}
+
+	void ResetGame(){
+		EnableButtons();
+		resultsText.text = resultsString;
+		digit1.text = zero.ToString();
+		digit2.text = zero.ToString();
+		digit3.text = zero.ToString();
+		digit4.text = zero.ToString();
+	}
+
+	void DisableButtons(){
+		upBtn1.interactable = false;
+		upBtn2.interactable = false;
+		upBtn3.interactable = false;
+		upBtn4.interactable = false;
+		downBtn1.interactable = false;
+		downBtn2.interactable = false;
+		downBtn3.interactable = false;
+		downBtn4.interactable = false;
+		submitGuessBtn.interactable = false;
+	}
+	
+	void EnableButtons(){
+		upBtn1.interactable = true;
+		upBtn2.interactable = true;
+		upBtn3.interactable = true;
+		upBtn4.interactable = true;
+		downBtn1.interactable = true;
+		downBtn2.interactable = true;
+		downBtn3.interactable = true;
+		downBtn4.interactable = true;
+		submitGuessBtn.interactable = true;
 	}
 }
 
