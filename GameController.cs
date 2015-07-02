@@ -23,7 +23,8 @@ public class GameController : MonoBehaviour {
 	public Text digit3;
 	public Text digit4;
 	public Text resultsText;
-	private int codeLength; 
+	private int codeLength;
+	private int numGuesses;
 	private int[] code;
     private int[] guess;
 	private int bullCounter;
@@ -42,6 +43,7 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		codeLength = 4;
+		numGuesses = 0;
 		code = new int[codeLength];
 		guess = new int[codeLength];
 		GenerateCode();
@@ -107,7 +109,7 @@ public class GameController : MonoBehaviour {
 				GameObject resultImageInstance = Instantiate(resultBullPref) as GameObject;
 				resultImageInstance.transform.SetParent(resultPanel);
 				resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
-				resultImageInstance.transform.position = new Vector2(resultPanel.position.x + cowX + (i * 35f), resultPanel.position.y + cowY);
+				resultImageInstance.transform.position = new Vector2(resultPanel.position.x + cowX + (i * 35f), resultPanel.position.y + cowY - (numGuesses * 30f));
 			}
 		}
 		if(cowCounter > 0){
@@ -116,21 +118,20 @@ public class GameController : MonoBehaviour {
 				GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
 				resultImageInstance.transform.SetParent(resultPanel);
 				resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
-				resultImageInstance.transform.position = new Vector2(resultPanel.position.x + cowX + (bullCounter * 35f) + (i * 35f), resultPanel.position.y + cowY);
+				resultImageInstance.transform.position = new Vector2(resultPanel.position.x + cowX + (bullCounter * 35f) + (i * 35f), resultPanel.position.y + cowY - (numGuesses * 30f));
 			}
 		}
-//		doesn't currently work
-//		cowResult.TrimEnd(' ');
 		for(int i = 0; i < guess.Length; i++){
 			resultsString += guess[i].ToString();
 		}
-		if(cowResult == "Bull Bull Bull Bull "){
+		if(bullCounter == 4){
 			resultsString = resultsString + " | " + cowResult + "You Win!!";
 			DisableButtons();
 		} else {
 			resultsString = resultsString + " | " + cowResult + "\n";
 		}
 		resultsText.text += resultsString;
+		numGuesses += 1;
 	}
 
 	void ResetVariables(){
@@ -147,6 +148,7 @@ public class GameController : MonoBehaviour {
 		digit2.text = zero.ToString();
 		digit3.text = zero.ToString();
 		digit4.text = zero.ToString();
+		numGuesses = 0;
 	}
 
 	void DisableButtons(){
