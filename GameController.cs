@@ -3,6 +3,12 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
+
+	public Text checkBtn;
+
+	public GameObject resultBullPref;
+	public GameObject resultCowPref;
+	public Transform resultPanel;
 	public Button upBtn1;
 	public Button upBtn2;
 	public Button upBtn3;
@@ -26,12 +32,19 @@ public class GameController : MonoBehaviour {
 	private string resultsString;
 	int zero = 0;
 
+	public void TestShowCode(){
+		checkBtn.text = "";
+		for(int i = 0; i < code.Length; i++){
+			checkBtn.text += code[i].ToString();
+		} 
+	}
+
 	// Use this for initialization
 	void Start () {
 		codeLength = 4;
 		code = new int[codeLength];
 		guess = new int[codeLength];
-//		GenerateCode();
+		GenerateCode();
 //		int[] testGuess = new int[4]{3,4,5,7};
 //		CheckGuess(testGuess);
 	}
@@ -64,6 +77,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void CheckGuess(int[] guess){
+		float cowX = -120f;
+		float cowY = 142f;
 		ResetVariables();
 		for(int i = 0; i < guess.Length; i++){
 			for(int j = 0; j < guess.Length; j++){
@@ -88,12 +103,20 @@ public class GameController : MonoBehaviour {
 		}
 		if(bullCounter > 0){
 			for(int i = 0; i < bullCounter; i++){
-				cowResult = cowResult + "Bull ";	
+//				cowResult = cowResult + "Bull ";
+				GameObject resultImageInstance = Instantiate(resultBullPref) as GameObject;
+				resultImageInstance.transform.SetParent(resultPanel);
+				resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
+				resultImageInstance.transform.position = new Vector2(resultPanel.position.x + cowX + (i * 35f), resultPanel.position.y + cowY);
 			}
 		}
 		if(cowCounter > 0){
 			for(int i = 0; i < cowCounter; i++){
-				cowResult = cowResult + "Cow ";	
+//				cowResult = cowResult + "Cow ";	
+				GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
+				resultImageInstance.transform.SetParent(resultPanel);
+				resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
+				resultImageInstance.transform.position = new Vector2(resultPanel.position.x + cowX + (bullCounter * 35f) + (i * 35f), resultPanel.position.y + cowY);
 			}
 		}
 //		doesn't currently work
