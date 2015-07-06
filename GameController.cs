@@ -174,23 +174,23 @@ public class GameController : MonoBehaviour {
 	}
 
 	IEnumerator SpawnResultImages(Transform panel, bool bull, int i, float waitTime){
-		float xPos = 0f;
-		float yPos = 0f;
+		float xPos = -700f;
+		float yPos = 40f;
 		float xSpacer = 80f;
-		float ySpacer = 30f;
+		float ySpacer = 0f;
 		yield return new WaitForSeconds(waitTime);
 		if(bull){
 			GameObject resultImageInstance = Instantiate(resultBullPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
 			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
 //			resultImageInstance.transform.position = new Vector2(resultPanel.position.x + xPos + (i * xSpacer), resultPanel.position.y + yPos - (numGuesses * ySpacer));
-			resultImageInstance.transform.position = new Vector2(xPos + (i * xSpacer), yPos - (numGuesses * ySpacer));
+			resultImageInstance.transform.localPosition = new Vector2(xPos + (i * xSpacer), yPos - ((numGuesses - 1) * ySpacer));
 			resultImageInstance.GetComponent<Animator>().Play ("BullAppear");
 		} else {
 			GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
 			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
-			resultImageInstance.transform.position = new Vector2(resultPanel.position.x + xPos + (bullCounter * xSpacer) + (i * xSpacer), resultPanel.position.y + yPos - (numGuesses * ySpacer));
+			resultImageInstance.transform.localPosition = new Vector2(xPos + (i * xSpacer), yPos - ((numGuesses - 1) * ySpacer));
 			resultImageInstance.GetComponent<Animator>().Play ("CowAppear");
 		}
 	}
