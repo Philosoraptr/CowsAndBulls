@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
 
 	public GameObject resultBullPref;
 	public GameObject resultCowPref;
+	public Transform notificationPanel;
 	public Transform resultPanel;
 	public Button upBtn1;
 	public Button upBtn2;
@@ -23,15 +24,16 @@ public class GameController : MonoBehaviour {
 	public Text digit3;
 	public Text digit4;
 	public Text resultsText;
+	public float appearWaitTime;
 	private int codeLength;
 	private int numGuesses;
 	private int[] code;
     private int[] guess;
 	private int bullCounter;
 	private int cowCounter;
+	private int zero = 0;
 	private string cowResult;
 	private string resultsString;
-	int zero = 0;
 
 	public void TestShowCode(){
 		checkBtn.text = "";
@@ -79,19 +81,20 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void CheckGuess(int[] guess){
-		float cowX = -120f;
-		float cowY = 142f;
 		ResetVariables();
 		for(int i = 0; i < guess.Length; i++){
 			for(int j = 0; j < guess.Length; j++){
 				if(guess[i] == guess[j]){
 					if(i != j){
+// Need a message box for the player here
 						Debug.Log("You cannot submit the same number twice.");
 						return;
 					}
 				}
 			}
 		}
+		Transform notificationPanelInstance = Instantiate(notificationPanel) as Transform;
+		notificationPanelInstance.transform.SetParent(resultPanel);
 		for(int i = 0; i < guess.Length; i++){
 			for(int j = 0; j < code.Length; j++){
 				if(guess[i] == code[j]){
@@ -106,19 +109,13 @@ public class GameController : MonoBehaviour {
 		if(bullCounter > 0){
 			for(int i = 0; i < bullCounter; i++){
 //				cowResult = cowResult + "Bull ";
-				GameObject resultImageInstance = Instantiate(resultBullPref) as GameObject;
-				resultImageInstance.transform.SetParent(resultPanel);
-				resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
-				resultImageInstance.transform.position = new Vector2(resultPanel.position.x + cowX + (i * 35f), resultPanel.position.y + cowY - (numGuesses * 30f));
+				StartCoroutine(SpawnResultImages(notificationPanelInstance, true, i, i * appearWaitTime));
 			}
 		}
 		if(cowCounter > 0){
 			for(int i = 0; i < cowCounter; i++){
 //				cowResult = cowResult + "Cow ";	
-				GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
-				resultImageInstance.transform.SetParent(resultPanel);
-				resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
-				resultImageInstance.transform.position = new Vector2(resultPanel.position.x + cowX + (bullCounter * 35f) + (i * 35f), resultPanel.position.y + cowY - (numGuesses * 30f));
+				StartCoroutine(SpawnResultImages(notificationPanelInstance, false, i, i * appearWaitTime));
 			}
 		}
 		for(int i = 0; i < guess.Length; i++){
@@ -174,6 +171,28 @@ public class GameController : MonoBehaviour {
 		downBtn4.interactable = true;
 		submitGuessBtn.interactable = true;
 	}
+
+	IEnumerator SpawnResultImages(Transform panel, bool bull, int i, float waitTime){
+		float xPos = -120f;
+		float yPos = 176f;
+		float xSpacer = 35f;
+		float ySpacer = 30f;
+		yield return new WaitForSeconds(waitTime);
+		if(bull){
+			GameObject resultImageInstance = Instantiate(resultBullPref) as GameObject;
+			resultImageInstance.transform.SetParent(panel);
+			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
+			resultImageInstance.transform.position = new Vector2(resultPanel.position.x + xPos + (i * xSpacer), resultPanel.position.y + yPos - (numGuesses * ySpacer));
+			resultImageInstance.GetComponent<Animator>().Play ("BullAppear");
+		} else {
+			GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
+			resultImageInstance.transform.SetParent(panel);
+			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
+			resultImageInstance.transform.position = new Vector2(resultPanel.position.x + xPos + (bullCounter * xSpacer) + (i * xSpacer), resultPanel.position.y + yPos - (numGuesses * ySpacer));
+			resultImageInstance.GetComponent<Animator>().Play ("CowAppear");
+		}
+	}
+
 }
 
 
