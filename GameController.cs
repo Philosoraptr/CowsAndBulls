@@ -190,7 +190,7 @@ public class GameController : MonoBehaviour {
 			GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
 			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
-			resultImageInstance.transform.localPosition = new Vector2(xPos + (i * xSpacer), yPos - ((numGuesses - 1) * ySpacer));
+			resultImageInstance.transform.localPosition = new Vector2(xPos + (bullCounter * xSpacer) + (i * xSpacer), yPos - ((numGuesses - 1) * ySpacer));
 			resultImageInstance.GetComponent<Animator>().Play ("CowAppear");
 		}
 	}
