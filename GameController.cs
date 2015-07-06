@@ -94,7 +94,8 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		Transform notificationPanelInstance = Instantiate(notificationPanel) as Transform;
-		notificationPanelInstance.transform.SetParent(resultPanel);
+        notificationPanelInstance.transform.SetParent(resultPanel);
+		notificationPanelInstance.transform.localScale = new Vector3(1, 1, 1);
 		for(int i = 0; i < guess.Length; i++){
 			for(int j = 0; j < code.Length; j++){
 				if(guess[i] == code[j]){
@@ -173,16 +174,17 @@ public class GameController : MonoBehaviour {
 	}
 
 	IEnumerator SpawnResultImages(Transform panel, bool bull, int i, float waitTime){
-		float xPos = -120f;
-		float yPos = 176f;
-		float xSpacer = 35f;
+		float xPos = 0f;
+		float yPos = 0f;
+		float xSpacer = 80f;
 		float ySpacer = 30f;
 		yield return new WaitForSeconds(waitTime);
 		if(bull){
 			GameObject resultImageInstance = Instantiate(resultBullPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
 			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
-			resultImageInstance.transform.position = new Vector2(resultPanel.position.x + xPos + (i * xSpacer), resultPanel.position.y + yPos - (numGuesses * ySpacer));
+//			resultImageInstance.transform.position = new Vector2(resultPanel.position.x + xPos + (i * xSpacer), resultPanel.position.y + yPos - (numGuesses * ySpacer));
+			resultImageInstance.transform.position = new Vector2(xPos + (i * xSpacer), yPos - (numGuesses * ySpacer));
 			resultImageInstance.GetComponent<Animator>().Play ("BullAppear");
 		} else {
 			GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
