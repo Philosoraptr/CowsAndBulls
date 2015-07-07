@@ -18,12 +18,12 @@ public class GameController : MonoBehaviour {
 	public Button downBtn2;
 	public Button downBtn3;
 	public Button downBtn4;
+	public Button notificationButton;
 	public Button submitGuessBtn;
 	public Text digit1;
 	public Text digit2;
 	public Text digit3;
 	public Text digit4;
-	public Text resultsText;
 	public float appearWaitTime;
 	private int codeLength;
 	private int numGuesses;
@@ -32,7 +32,6 @@ public class GameController : MonoBehaviour {
 	private int bullCounter;
 	private int cowCounter;
 	private int zero = 0;
-	private string cowResult;
 	private string resultsString;
 
 	public void TestShowCode(){
@@ -95,6 +94,7 @@ public class GameController : MonoBehaviour {
 		}
 		Transform notificationPanelInstance = Instantiate(notificationPanel) as Transform;
         notificationPanelInstance.transform.SetParent(resultPanel);
+		notificationPanelInstance.transform.SetAsFirstSibling();
 		notificationPanelInstance.transform.localScale = new Vector3(1, 1, 1);
 		for(int i = 0; i < guess.Length; i++){
 			for(int j = 0; j < code.Length; j++){
@@ -109,13 +109,11 @@ public class GameController : MonoBehaviour {
 		}
 		if(bullCounter > 0){
 			for(int i = 0; i < bullCounter; i++){
-//				cowResult = cowResult + "Bull ";
 				StartCoroutine(SpawnResultImages(notificationPanelInstance, true, i, i * appearWaitTime));
 			}
 		}
 		if(cowCounter > 0){
 			for(int i = 0; i < cowCounter; i++){
-//				cowResult = cowResult + "Cow ";	
 				StartCoroutine(SpawnResultImages(notificationPanelInstance, false, i, i * appearWaitTime));
 			}
 		}
@@ -123,17 +121,16 @@ public class GameController : MonoBehaviour {
 			resultsString += guess[i].ToString();
 		}
 		if(bullCounter == 4){
-			resultsString = resultsString + " | " + cowResult + "You Win!!";
+			notificationButton.gameObject.SetActive(true);
 			DisableButtons();
 		} else {
-			resultsString = resultsString + " | " + cowResult + "\n";
+			resultsString = resultsString + " | ";
 		}
-		resultsText.text += resultsString;
+		notificationPanelInstance.GetComponent<Text>().text += resultsString;
 		numGuesses += 1;
 	}
 
 	void ResetVariables(){
-		cowResult = "";
 		resultsString = "";
 		bullCounter = 0;
 		cowCounter = 0;
@@ -141,12 +138,14 @@ public class GameController : MonoBehaviour {
 
 	void ResetGame(){
 		EnableButtons();
-		resultsText.text = resultsString;
 		digit1.text = zero.ToString();
 		digit2.text = zero.ToString();
 		digit3.text = zero.ToString();
 		digit4.text = zero.ToString();
 		numGuesses = 0;
+		foreach(Transform child in resultPanel.transform){
+			Destroy(child.gameObject);
+		}
 	}
 
 	void DisableButtons(){
@@ -174,8 +173,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	IEnumerator SpawnResultImages(Transform panel, bool bull, int i, float waitTime){
-		float xPos = -700f;
-		float yPos = 40f;
+		float xPos = 200f;
+		float yPos = 0f;
 		float xSpacer = 80f;
 		float ySpacer = 0f;
 		yield return new WaitForSeconds(waitTime);
@@ -183,7 +182,6 @@ public class GameController : MonoBehaviour {
 			GameObject resultImageInstance = Instantiate(resultBullPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
 			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
-//			resultImageInstance.transform.position = new Vector2(resultPanel.position.x + xPos + (i * xSpacer), resultPanel.position.y + yPos - (numGuesses * ySpacer));
 			resultImageInstance.transform.localPosition = new Vector2(xPos + (i * xSpacer), yPos - ((numGuesses - 1) * ySpacer));
 			resultImageInstance.GetComponent<Animator>().Play ("BullAppear");
 		} else {
