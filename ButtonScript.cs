@@ -10,7 +10,10 @@ public class ButtonScript : MonoBehaviour {
 		value = int.Parse(guessText.GetComponent<Text>().text);
 		if(value < 9){
 			value += 1;
+		} else if(value == 9){
+			value = 0;
 		}
+
 		guessText.text = value.ToString();
 	}
 
@@ -19,6 +22,8 @@ public class ButtonScript : MonoBehaviour {
 		value = int.Parse(guessText.GetComponent<Text>().text);
 		if(value > 0){
 			value -= 1;
+		} else if(value == 0){
+			value = 9;
 		}
 		guessText.text = value.ToString();
 	}

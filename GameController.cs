@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
 
 	public GameObject resultBullPref;
 	public GameObject resultCowPref;
+	public Transform gamePanel;
 	public Transform notificationPanel;
 	public Transform resultPanel;
 	public Button upBtn1;
@@ -52,6 +53,15 @@ public class GameController : MonoBehaviour {
 //		CheckGuess(testGuess);
 	}
 
+	void Update(){
+		if (Input.GetKeyDown(KeyCode.Escape)) 
+			GoToMenuScene();
+	}
+
+	public void GoToMenuScene(){
+		Application.LoadLevel("MenuScene"); 
+	}
+
 	public void GenerateCode(){
 		ResetVariables();
 		ResetGame();
@@ -87,6 +97,11 @@ public class GameController : MonoBehaviour {
 					if(i != j){
 // Need a message box for the player here
 						Debug.Log("You cannot submit the same number twice.");
+						Button notificationButtonInstance = Instantiate(notificationButton) as Button;
+						notificationButtonInstance.GetComponentInChildren<Text>().text = "You may only use each digit once.";
+						notificationButtonInstance.transform.SetParent(gamePanel);
+						notificationButtonInstance.transform.localScale = new Vector3(1, 1, 1);
+						notificationButtonInstance.transform.localPosition = new Vector3(10, 100, 1);
 						return;
 					}
 				}
@@ -114,17 +129,22 @@ public class GameController : MonoBehaviour {
 		}
 		if(cowCounter > 0){
 			for(int i = 0; i < cowCounter; i++){
-				StartCoroutine(SpawnResultImages(notificationPanelInstance, false, i, i * appearWaitTime));
+				StartCoroutine(SpawnResultImages(notificationPanelInstance, false, i, (bullCounter + i) * appearWaitTime));
 			}
 		}
 		for(int i = 0; i < guess.Length; i++){
 			resultsString += guess[i].ToString();
 		}
 		if(bullCounter == 4){
-			notificationButton.gameObject.SetActive(true);
+			resultsString = " " + resultsString + " | ";
+			Button notificationButtonInstance = Instantiate(notificationButton) as Button;
+			notificationButtonInstance.GetComponentInChildren<Text>().text = "You win!";
+			notificationButtonInstance.transform.SetParent(gamePanel);
+			notificationButtonInstance.transform.localScale = new Vector3(1, 1, 1);
+			notificationButtonInstance.transform.localPosition = new Vector3(10, 100, 1);
 			DisableButtons();
 		} else {
-			resultsString = resultsString + " | ";
+			resultsString = " " + resultsString + " | ";
 		}
 		notificationPanelInstance.GetComponent<Text>().text += resultsString;
 		numGuesses += 1;
@@ -177,13 +197,17 @@ public class GameController : MonoBehaviour {
 		float yPos = 0f;
 		float xSpacer = 80f;
 		float ySpacer = 0f;
+		string animName;
 		yield return new WaitForSeconds(waitTime);
 		if(bull){
 			GameObject resultImageInstance = Instantiate(resultBullPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
 			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
 			resultImageInstance.transform.localPosition = new Vector2(xPos + (i * xSpacer), yPos - ((numGuesses - 1) * ySpacer));
-			resultImageInstance.GetComponent<Animator>().Play ("BullAppear");
+//			animName = "BullAppear1";
+//			animName = string.Concat("BullAppear", Random.Range(1, 5));
+//			Debug.Log(animName);
+//			resultImageInstance.GetComponent<Animator>().Play (animName);
 		} else {
 			GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
