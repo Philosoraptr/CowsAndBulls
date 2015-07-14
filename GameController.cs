@@ -135,7 +135,7 @@ public class GameController : MonoBehaviour {
 		for(int i = 0; i < guess.Length; i++){
 			resultsString += guess[i].ToString();
 		}
-		if(bullCounter == 4){
+		if(bullCounter == codeLength){
 			resultsString = " " + resultsString + " | ";
 			Button notificationButtonInstance = Instantiate(notificationButton) as Button;
 			notificationButtonInstance.GetComponentInChildren<Text>().text = "You win!";
@@ -204,16 +204,15 @@ public class GameController : MonoBehaviour {
 			resultImageInstance.transform.SetParent(panel);
 			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
 			resultImageInstance.transform.localPosition = new Vector2(xPos + (i * xSpacer), yPos - ((numGuesses - 1) * ySpacer));
-//			animName = "BullAppear1";
-//			animName = string.Concat("BullAppear", Random.Range(1, 5));
-//			Debug.Log(animName);
-//			resultImageInstance.GetComponent<Animator>().Play (animName);
+			animName = string.Concat("BullAppear", Random.Range(1, 4));
+			resultImageInstance.GetComponent<Animator>().Play (animName);
 		} else {
 			GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
 			resultImageInstance.transform.localScale = new Vector3(1, 1, 1);
 			resultImageInstance.transform.localPosition = new Vector2(xPos + (bullCounter * xSpacer) + (i * xSpacer), yPos - ((numGuesses - 1) * ySpacer));
-			resultImageInstance.GetComponent<Animator>().Play ("CowAppear");
+			animName = string.Concat("CowAppear", Random.Range(1, 4));
+			resultImageInstance.GetComponent<Animator>().Play (animName);
 		}
 	}
 
