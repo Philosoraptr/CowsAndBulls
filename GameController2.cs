@@ -2,7 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class GameController : MonoBehaviour {
+//Used for GameScene2 - 5 digits
+public class GameController2 : MonoBehaviour {
 
 	public Text checkBtn;
 
@@ -16,16 +17,19 @@ public class GameController : MonoBehaviour {
 	public Button upBtn2;
 	public Button upBtn3;
 	public Button upBtn4;
+	public Button upBtn5;
 	public Button downBtn1;
 	public Button downBtn2;
 	public Button downBtn3;
 	public Button downBtn4;
+	public Button downBtn5;
 	public Button notificationButton;
 	public Button submitGuessBtn;
 	public Text digit1;
 	public Text digit2;
 	public Text digit3;
 	public Text digit4;
+	public Text digit5;
 	public float appearWaitTime;
 	private int codeLength;
 	private int numGuesses;
@@ -45,7 +49,7 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start (){
-		codeLength = 4;
+		codeLength = 5;
 		numGuesses = 0;
 		code = new int[codeLength];
 		guess = new int[codeLength];
@@ -87,6 +91,7 @@ public class GameController : MonoBehaviour {
 		guess[1] = int.Parse(digit2.text);
 		guess[2] = int.Parse(digit3.text);
 		guess[3] = int.Parse(digit4.text);
+		guess[4] = int.Parse(digit5.text);
 		CheckGuess(guess);
 	}
 
@@ -96,6 +101,8 @@ public class GameController : MonoBehaviour {
 			for(int j = 0; j < guess.Length; j++){
 				if(guess[i] == guess[j]){
 					if(i != j){
+// Need a message box for the player here
+						Debug.Log("You cannot submit the same number twice.");
 						Button notificationButtonInstance = Instantiate(notificationButton) as Button;
 						notificationButtonInstance.GetComponentInChildren<Text>().text = "You may only use each digit once.";
 						notificationButtonInstance.transform.SetParent(gamePanel);
@@ -161,6 +168,7 @@ public class GameController : MonoBehaviour {
 		digit2.text = zero.ToString();
 		digit3.text = zero.ToString();
 		digit4.text = zero.ToString();
+		digit5.text = zero.ToString();
 		numGuesses = 0;
 		foreach(Transform child in resultPanel.transform){
 			Destroy(child.gameObject);
@@ -172,10 +180,12 @@ public class GameController : MonoBehaviour {
 		upBtn2.interactable = false;
 		upBtn3.interactable = false;
 		upBtn4.interactable = false;
+		upBtn5.interactable = false;
 		downBtn1.interactable = false;
 		downBtn2.interactable = false;
 		downBtn3.interactable = false;
 		downBtn4.interactable = false;
+		downBtn5.interactable = false;
 		submitGuessBtn.interactable = false;
 	}
 	
@@ -184,10 +194,12 @@ public class GameController : MonoBehaviour {
 		upBtn2.interactable = true;
 		upBtn3.interactable = true;
 		upBtn4.interactable = true;
+		upBtn5.interactable = true;
 		downBtn1.interactable = true;
 		downBtn2.interactable = true;
 		downBtn3.interactable = true;
 		downBtn4.interactable = true;
+		downBtn5.interactable = true;
 		submitGuessBtn.interactable = true;
 	}
 

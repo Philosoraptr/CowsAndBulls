@@ -4,6 +4,13 @@ using System.Collections;
 
 public class ButtonScript : MonoBehaviour {
 	public Text guessText;
+	private AudioSource audioPlayer;
+	private AudioClip clip;
+
+	void Start(){
+		audioPlayer = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioSource>();
+		clip = audioPlayer.clip;
+	}
 
 	public void IncreaseValue(){
 		int value;
@@ -13,8 +20,8 @@ public class ButtonScript : MonoBehaviour {
 		} else if(value == 9){
 			value = 0;
 		}
-
 		guessText.text = value.ToString();
+		audioPlayer.PlayOneShot(clip);
 	}
 
 	public void DecreaseValue(){
@@ -26,5 +33,6 @@ public class ButtonScript : MonoBehaviour {
 			value = 9;
 		}
 		guessText.text = value.ToString();
+		audioPlayer.PlayOneShot(clip);
 	}
 }

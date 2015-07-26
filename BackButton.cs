@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class InstructionsBackButton : MonoBehaviour {
+public class BackButton : MonoBehaviour {
 
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Escape)) 
