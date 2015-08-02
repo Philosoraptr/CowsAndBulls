@@ -7,6 +7,7 @@ public class GameController2 : MonoBehaviour {
 
 	public Text checkBtn;
 
+	public GameObject winSceneBull;
 	public GameObject resultBullPref;
 	public GameObject resultCowPref;
 	public GameObject audioPlayer;
@@ -30,6 +31,7 @@ public class GameController2 : MonoBehaviour {
 	public Text digit3;
 	public Text digit4;
 	public Text digit5;
+	public Text guesses;
 	public float appearWaitTime;
 	private int codeLength;
 	private int numGuesses;
@@ -39,6 +41,7 @@ public class GameController2 : MonoBehaviour {
 	private int cowCounter;
 	private int zero = 0;
 	private string resultsString;
+	private bool won;
 
 	public void TestShowCode(){
 		checkBtn.text = "";
@@ -54,6 +57,8 @@ public class GameController2 : MonoBehaviour {
 		code = new int[codeLength];
 		guess = new int[codeLength];
 		GenerateCode();
+//		won = false;
+		CancelInvoke("WinScene");
 //		int[] testGuess = new int[4]{3,4,5,7};
 //		CheckGuess(testGuess);
 	}
@@ -61,6 +66,8 @@ public class GameController2 : MonoBehaviour {
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Escape)) 
 			GoToMenuScene();
+		if (Input.touchCount == 1)
+			won = false;
 	}
 
 	public void GoToMenuScene(){
@@ -148,12 +155,15 @@ public class GameController2 : MonoBehaviour {
 			notificationButtonInstance.transform.SetParent(gamePanel);
 			notificationButtonInstance.transform.localScale = new Vector3(1, 1, 1);
 			notificationButtonInstance.transform.localPosition = new Vector3(10, 100, 1);
+//			won = true;
+			Repeater();
 			DisableButtons();
 		} else {
 			resultsString = " " + resultsString + " | ";
 		}
 		notificationPanelInstance.GetComponent<Text>().text += resultsString;
 		numGuesses += 1;
+		guesses.text = string.Concat("Guesses: ", numGuesses);
 	}
 
 	void ResetVariables(){
@@ -170,6 +180,7 @@ public class GameController2 : MonoBehaviour {
 		digit4.text = zero.ToString();
 		digit5.text = zero.ToString();
 		numGuesses = 0;
+		guesses.text = string.Concat("Guesses: ", numGuesses);
 		foreach(Transform child in resultPanel.transform){
 			Destroy(child.gameObject);
 		}
@@ -229,6 +240,32 @@ public class GameController2 : MonoBehaviour {
 		}
 	}
 
+//	IEnumerator WinScene(){
+//		yield return new WaitForSeconds(appearWaitTime * 5);
+//
+//		GameObject crazyBull = Instantiate(winSceneBull) as GameObject;
+//		crazyBull.transform.SetParent(gamePanel);
+//		crazyBull.transform.localScale = new Vector3(1f, 1f, 1f);
+//		crazyBull.transform.localPosition = new Vector3(62f, 440f, 0f);
+//		crazyBull.GetComponent<Rigidbody2D>().AddForce(new Vector2(50f, 50f));
+//	}
+
+	void WinScene(){
+		GameObject crazyBull = Instantiate(winSceneBull) as GameObject;
+		crazyBull.transform.SetParent(gamePanel);
+		crazyBull.transform.localScale = new Vector3(1f, 1f, 1f);
+		crazyBull.transform.localPosition = new Vector3(62f, 440f, 0f);
+		crazyBull.GetComponent<Rigidbody2D>().AddForce(new Vector2(50f, 50f));
+	}
+
+	void Repeater(){
+		InvokeRepeating("WinScene", appearWaitTime * 5f, 0.2f);
+	}
+
+//	void LateUpdate(){
+//		if(won)
+//			StartCoroutine(WinScene());
+//	}
 }
 
 

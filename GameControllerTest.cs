@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
-public class GameController : MonoBehaviour {
+[System.Serializable]
+public class GameControllerTest : MonoBehaviour {
 
 	public Text checkBtn;
+	public List<GuessButton> guessButtonList = new List<GuessButton>();
 
 	public GameObject resultBullPref;
 	public GameObject resultCowPref;
@@ -12,20 +15,8 @@ public class GameController : MonoBehaviour {
 	public Transform gamePanel;
 	public Transform notificationPanel;
 	public Transform resultPanel;
-	public Button upBtn1;
-	public Button upBtn2;
-	public Button upBtn3;
-	public Button upBtn4;
-	public Button downBtn1;
-	public Button downBtn2;
-	public Button downBtn3;
-	public Button downBtn4;
 	public Button notificationButton;
 	public Button submitGuessBtn;
-	public Text digit1;
-	public Text digit2;
-	public Text digit3;
-	public Text digit4;
 	public Text guesses;
 	public float appearWaitTime;
 	private int codeLength;
@@ -46,7 +37,7 @@ public class GameController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start (){
-		codeLength = 4;
+		codeLength = guessButtonList.Count;
 		numGuesses = 0;
 		code = new int[codeLength];
 		guess = new int[codeLength];
@@ -84,10 +75,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void SetGuess(){
-		guess[0] = int.Parse(digit1.text);
-		guess[1] = int.Parse(digit2.text);
-		guess[2] = int.Parse(digit3.text);
-		guess[3] = int.Parse(digit4.text);
+		for(int i = 0; i < guessButtonList.Count; i++){
+			guess[i] = int.Parse(guessButtonList[i].digit.text);
+		}
 		CheckGuess(guess);
 	}
 
@@ -159,10 +149,9 @@ public class GameController : MonoBehaviour {
 
 	void ResetGame(){
 		EnableButtons();
-		digit1.text = zero.ToString();
-		digit2.text = zero.ToString();
-		digit3.text = zero.ToString();
-		digit4.text = zero.ToString();
+		for(int i = 0; i < guessButtonList.Count; i++){
+			guessButtonList[i].digit.text = zero.ToString();
+		}
 		numGuesses = 0;
 		guesses.text = string.Concat("Guesses: ", numGuesses);
 		foreach(Transform child in resultPanel.transform){
@@ -171,26 +160,18 @@ public class GameController : MonoBehaviour {
 	}
 
 	void DisableButtons(){
-		upBtn1.interactable = false;
-		upBtn2.interactable = false;
-		upBtn3.interactable = false;
-		upBtn4.interactable = false;
-		downBtn1.interactable = false;
-		downBtn2.interactable = false;
-		downBtn3.interactable = false;
-		downBtn4.interactable = false;
+		for(int i = 0; i < guessButtonList.Count; i++){
+			guessButtonList[i].upBtn.interactable = false;
+			guessButtonList[i].downBtn.interactable = false;
+		}
 		submitGuessBtn.interactable = false;
 	}
 	
 	void EnableButtons(){
-		upBtn1.interactable = true;
-		upBtn2.interactable = true;
-		upBtn3.interactable = true;
-		upBtn4.interactable = true;
-		downBtn1.interactable = true;
-		downBtn2.interactable = true;
-		downBtn3.interactable = true;
-		downBtn4.interactable = true;
+		for(int i = 0; i < guessButtonList.Count; i++){
+			guessButtonList[i].upBtn.interactable = true;
+			guessButtonList[i].downBtn.interactable = true;
+		}
 		submitGuessBtn.interactable = true;
 	}
 
