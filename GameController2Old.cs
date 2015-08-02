@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 //Used for GameScene2 - 5 digits
-public class GameController2 : MonoBehaviour {
+public class GameController2Old : MonoBehaviour {
 
 	public Text checkBtn;
 
