@@ -9,6 +9,7 @@ public class GameController : MonoBehaviour {
 	public Text checkBtn;
 
 	public List<GuessButton> guessButtonList = new List<GuessButton>();
+	public GameObject winSceneBull;
 	public GameObject resultBullPref;
 	public GameObject resultCowPref;
 	public GameObject audioPlayer;
@@ -19,6 +20,8 @@ public class GameController : MonoBehaviour {
 	public Button submitGuessBtn;
 	public Text guesses;
 	public float appearWaitTime;
+	private float gameStartTime;
+	private float gameTimeTaken;
 	private int codeLength;
 	private int numGuesses;
 	private int[] code;
@@ -35,20 +38,19 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
 	void Start (){
 		codeLength = guessButtonList.Count;
 		numGuesses = 0;
 		code = new int[codeLength];
 		guess = new int[codeLength];
 		GenerateCode();
-//		int[] testGuess = new int[4]{3,4,5,7};
-//		CheckGuess(testGuess);
 	}
 
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Escape)) 
 			GoToMenuScene();
+		if (Input.touchCount == 1 || Input.GetMouseDown(0)) 
+			CancelInvoke("WinScene"); 
 	}
 
 	public void GoToMenuScene(){
@@ -132,7 +134,9 @@ public class GameController : MonoBehaviour {
 			notificationButtonInstance.transform.SetParent(gamePanel);
 			notificationButtonInstance.transform.localScale = new Vector3(1, 1, 1);
 			notificationButtonInstance.transform.localPosition = new Vector3(10, 100, 1);
+			Repeater();
 			DisableButtons();
+			gameTimeTaken = time.time - gameStartTime;
 		} else {
 			resultsString = " " + resultsString + " | ";
 		}
@@ -140,20 +144,25 @@ public class GameController : MonoBehaviour {
 		numGuesses += 1;
 		guesses.text = string.Concat("Guesses: ", numGuesses);
 	}
-
+// This is used to reset variables used between guesses
 	void ResetVariables(){
 		resultsString = "";
 		bullCounter = 0;
 		cowCounter = 0;
 	}
-
+// This is used to reset variables used between games
 	void ResetGame(){
 		EnableButtons();
+		DestroyResults();
 		for(int i = 0; i < guessButtonList.Count; i++){
 			guessButtonList[i].digit.text = zero.ToString();
 		}
 		numGuesses = 0;
 		guesses.text = string.Concat("Guesses: ", numGuesses);
+		gameStartTime = time.time;
+	}
+
+	void DestroyResults(){
 		foreach(Transform child in resultPanel.transform){
 			Destroy(child.gameObject);
 		}
@@ -202,6 +211,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	void WinScene(){
+		DestroyResults();
 		GameObject crazyBull = Instantiate(winSceneBull) as GameObject;
 		crazyBull.transform.SetParent(gamePanel);
 		crazyBull.transform.localScale = new Vector3(1f, 1f, 1f);
