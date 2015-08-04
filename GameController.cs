@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour {
 
 	public List<GuessButton> guessButtonList = new List<GuessButton>();
 	public GameObject winSceneBull;
+	public GameObject winSceneCow;
 	public GameObject resultBullPref;
 	public GameObject resultCowPref;
 	public GameObject audioPlayer;
@@ -49,7 +50,7 @@ public class GameController : MonoBehaviour {
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Escape)) 
 			GoToMenuScene();
-		if (Input.touchCount == 1 || Input.GetMouseDown(0)) 
+		if (Input.touchCount == 1 || Input.GetMouseButtonDown(0)) 
 			CancelInvoke("WinScene"); 
 	}
 
@@ -136,7 +137,8 @@ public class GameController : MonoBehaviour {
 			notificationButtonInstance.transform.localPosition = new Vector3(10, 100, 1);
 			Repeater();
 			DisableButtons();
-			gameTimeTaken = time.time - gameStartTime;
+			gameTimeTaken = Time.time - gameStartTime;
+			Debug.Log("Game time taken:" + gameTimeTaken);
 		} else {
 			resultsString = " " + resultsString + " | ";
 		}
@@ -159,7 +161,8 @@ public class GameController : MonoBehaviour {
 		}
 		numGuesses = 0;
 		guesses.text = string.Concat("Guesses: ", numGuesses);
-		gameStartTime = time.time;
+		gameStartTime = Time.time;
+		Debug.Log("Start time:" + gameStartTime);
 	}
 
 	void DestroyResults(){
@@ -212,15 +215,29 @@ public class GameController : MonoBehaviour {
 
 	void WinScene(){
 		DestroyResults();
-		GameObject crazyBull = Instantiate(winSceneBull) as GameObject;
-		crazyBull.transform.SetParent(gamePanel);
-		crazyBull.transform.localScale = new Vector3(1f, 1f, 1f);
-		crazyBull.transform.localPosition = new Vector3(62f, 440f, 0f);
-		crazyBull.GetComponent<Rigidbody2D>().AddForce(new Vector2(50f, 50f));
+		for(int i = 0; i < codeLength; i++){
+			int rand = Random.Range(0, 2);
+			if(rand == 0){
+				SpawnRigidCows(winSceneBull, i);
+			} else if(rand == 1){
+				SpawnRigidCows(winSceneCow, i);
+			}
+		}
 	}
 	
 	void Repeater(){
-		InvokeRepeating("WinScene", appearWaitTime * 5f, 0.2f);
+		InvokeRepeating("WinScene", appearWaitTime * 5f, 0.1f);
+	}
+
+	void SpawnRigidCows(GameObject cowBull, int step){
+		float xPos = -258f;
+		float yPos = 440f;
+		float xSpacer = 80f;
+		GameObject rigidCow = Instantiate(cowBull) as GameObject;
+		rigidCow.transform.SetParent(gamePanel);
+		rigidCow.transform.localScale = new Vector3(1f, 1f, 1f);
+		rigidCow.transform.localPosition = new Vector3(xPos + (step * xSpacer), yPos, 0f);
+		rigidCow.GetComponent<Rigidbody2D>().AddForce(new Vector2(50f, 50f));
 	}
 }
 

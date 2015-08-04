@@ -41,7 +41,6 @@ public class GameController2Old : MonoBehaviour {
 	private int cowCounter;
 	private int zero = 0;
 	private string resultsString;
-	private bool won;
 
 	public void TestShowCode(){
 		checkBtn.text = "";
@@ -66,8 +65,8 @@ public class GameController2Old : MonoBehaviour {
 	void Update(){
 		if (Input.GetKeyDown(KeyCode.Escape)) 
 			GoToMenuScene();
-		if (Input.touchCount == 1)
-			won = false;
+//		if (Input.touchCount == 1)
+//			won = false;
 	}
 
 	public void GoToMenuScene(){
