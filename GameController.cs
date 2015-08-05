@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour {
 	public float appearWaitTime;
 	private float gameStartTime;
 	private float gameTimeTaken;
+	private int gameScore;
 	private int codeLength;
 	private int numGuesses;
 	private int[] code;
@@ -100,6 +101,7 @@ public class GameController : MonoBehaviour {
 				}
 			}
 		}
+		numGuesses += 1;
 		Transform notificationPanelInstance = Instantiate(notificationPanel) as Transform;
         notificationPanelInstance.transform.SetParent(resultPanel);
 		notificationPanelInstance.transform.SetAsFirstSibling();
@@ -133,17 +135,18 @@ public class GameController : MonoBehaviour {
 			Button notificationButtonInstance = Instantiate(notificationButton) as Button;
 			notificationButtonInstance.GetComponentInChildren<Text>().text = "You win!";
 			notificationButtonInstance.transform.SetParent(gamePanel);
-			notificationButtonInstance.transform.localScale = new Vector3(1, 1, 1);
-			notificationButtonInstance.transform.localPosition = new Vector3(10, 100, 1);
+			notificationButtonInstance.transform.localScale = new Vector3(1f, 1f, 1f);
+			notificationButtonInstance.transform.localPosition = new Vector3(10f, 100f, 1f);
 			Repeater();
 			DisableButtons();
 			gameTimeTaken = Time.time - gameStartTime;
-			Debug.Log("Game time taken:" + gameTimeTaken);
+			Debug.Log("Game time taken: " + gameTimeTaken);
+			gameScore = 1000 - (numGuesses * 30) - (int)gameTimeTaken;
+			Debug.Log("Game score: " + gameScore);
 		} else {
 			resultsString = " " + resultsString + " | ";
 		}
 		notificationPanelInstance.GetComponent<Text>().text += resultsString;
-		numGuesses += 1;
 		guesses.text = string.Concat("Guesses: ", numGuesses);
 	}
 // This is used to reset variables used between guesses
