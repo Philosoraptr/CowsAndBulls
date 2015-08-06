@@ -94,8 +94,8 @@ public class GameController : MonoBehaviour {
 						Button notificationButtonInstance = Instantiate(notificationButton) as Button;
 						notificationButtonInstance.GetComponentInChildren<Text>().text = "You may only use each digit once.";
 						notificationButtonInstance.transform.SetParent(gamePanel);
-						notificationButtonInstance.transform.localScale = new Vector3(1, 1, 1);
-						notificationButtonInstance.transform.localPosition = new Vector3(10, 100, 1);
+						notificationButtonInstance.transform.localScale = new Vector3(1f, 1f, 1f);
+						notificationButtonInstance.transform.localPosition = new Vector3(10f, 100f, 1f);
 						return;
 					}
 				}
@@ -229,7 +229,7 @@ public class GameController : MonoBehaviour {
 	}
 	
 	void Repeater(){
-		InvokeRepeating("WinScene", appearWaitTime * 5f, 0.1f);
+		InvokeRepeating("WinScene", appearWaitTime * 5f, 0.4f);
 	}
 
 	void SpawnRigidCows(GameObject cowBull, int step){
@@ -240,7 +240,7 @@ public class GameController : MonoBehaviour {
 		rigidCow.transform.SetParent(gamePanel);
 		rigidCow.transform.localScale = new Vector3(1f, 1f, 1f);
 		rigidCow.transform.localPosition = new Vector3(xPos + (step * xSpacer), yPos, 0f);
-		rigidCow.GetComponent<Rigidbody2D>().AddForce(new Vector2(50f, 50f));
+		rigidCow.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 0f));
 	}
 }
 
