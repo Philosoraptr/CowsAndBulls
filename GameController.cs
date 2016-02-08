@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour {
 	public Transform resultPanel;
 	public Button notificationButton;
 	public Button submitGuessBtn;
+	public Sprite digitLimit;
 	public Text guesses;
 	public float appearWaitTime;
 	private float gameStartTime;
@@ -64,7 +65,6 @@ public class GameController : MonoBehaviour {
 		ResetGame();
 		for(int i = 0; i < code.Length; i++){
 			code[i] = GenerateUniqueRandomInt(0, 10, code);
-			Debug.Log(code[i]);
 		}
 	}
 
@@ -92,10 +92,12 @@ public class GameController : MonoBehaviour {
 				if(guess[i] == guess[j]){
 					if(i != j){
 						Button notificationButtonInstance = Instantiate(notificationButton) as Button;
-						notificationButtonInstance.GetComponentInChildren<Text>().text = "You may only use each digit once.";
+//						notificationButtonInstance.GetComponentInChildren<Text>().text = "You may only use each digit once.";
 						notificationButtonInstance.transform.SetParent(gamePanel);
 						notificationButtonInstance.transform.localScale = new Vector3(1f, 1f, 1f);
 						notificationButtonInstance.transform.localPosition = new Vector3(10f, 100f, 1f);
+						notificationButtonInstance.GetComponent<Image>().sprite = digitLimit;
+						notificationButtonInstance.GetComponent<Image>().SetNativeSize();
 						return;
 					}
 				}
@@ -131,20 +133,18 @@ public class GameController : MonoBehaviour {
 			resultsString += guess[i].ToString();
 		}
 		if(bullCounter == codeLength){
-			resultsString = " " + resultsString + " | ";
+			resultsString = " " + resultsString;
 			Button notificationButtonInstance = Instantiate(notificationButton) as Button;
-			notificationButtonInstance.GetComponentInChildren<Text>().text = "You win!";
 			notificationButtonInstance.transform.SetParent(gamePanel);
 			notificationButtonInstance.transform.localScale = new Vector3(1f, 1f, 1f);
 			notificationButtonInstance.transform.localPosition = new Vector3(10f, 100f, 1f);
-			Repeater();
+//This is a winning animation that has been disabled because it doesn't work on android with the current settings
+//			Repeater();
 			DisableButtons();
 			gameTimeTaken = Time.time - gameStartTime;
-			Debug.Log("Game time taken: " + gameTimeTaken);
 			gameScore = 1000 - (numGuesses * 30) - (int)gameTimeTaken;
-			Debug.Log("Game score: " + gameScore);
 		} else {
-			resultsString = " " + resultsString + " | ";
+			resultsString = " " + resultsString;
 		}
 		notificationPanelInstance.GetComponent<Text>().text += resultsString;
 		guesses.text = string.Concat("Guesses: ", numGuesses);
@@ -165,7 +165,6 @@ public class GameController : MonoBehaviour {
 		numGuesses = 0;
 		guesses.text = string.Concat("Guesses: ", numGuesses);
 		gameStartTime = Time.time;
-		Debug.Log("Start time:" + gameStartTime);
 	}
 
 	void DestroyResults(){
@@ -205,6 +204,8 @@ public class GameController : MonoBehaviour {
 			animName = string.Concat("BullAppear", Random.Range(1, 4));
 			resultImageInstance.GetComponent<Animator>().Play (animName);
 			audioPlayer.GetComponent<AudioPlayer>().PlayRandomMoo();
+			yield return new WaitForSeconds(5f);
+			Destroy(resultImageInstance.GetComponent<Animator>());
 		} else {
 			GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
@@ -213,35 +214,37 @@ public class GameController : MonoBehaviour {
 			animName = string.Concat("CowAppear", Random.Range(1, 4));
 			resultImageInstance.GetComponent<Animator>().Play (animName);
 			audioPlayer.GetComponent<AudioPlayer>().PlayRandomMoo();
+			yield return new WaitForSeconds(5f);
+			Destroy(resultImageInstance.GetComponent<Animator>());
 		}
 	}
-
-	void WinScene(){
-		DestroyResults();
-		for(int i = 0; i < codeLength; i++){
-			int rand = Random.Range(0, 2);
-			if(rand == 0){
-				SpawnRigidCows(winSceneBull, i);
-			} else if(rand == 1){
-				SpawnRigidCows(winSceneCow, i);
-			}
-		}
-	}
-	
-	void Repeater(){
-		InvokeRepeating("WinScene", appearWaitTime * 5f, 0.4f);
-	}
-
-	void SpawnRigidCows(GameObject cowBull, int step){
-		float xPos = -258f;
-		float yPos = 440f;
-		float xSpacer = 80f;
-		GameObject rigidCow = Instantiate(cowBull) as GameObject;
-		rigidCow.transform.SetParent(gamePanel);
-		rigidCow.transform.localScale = new Vector3(1f, 1f, 1f);
-		rigidCow.transform.localPosition = new Vector3(xPos + (step * xSpacer), yPos, 0f);
-		rigidCow.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 0f));
-	}
+//
+//	void WinScene(){
+//		DestroyResults();
+//		for(int i = 0; i < codeLength; i++){
+//			int rand = Random.Range(0, 2);
+//			if(rand == 0){
+//				SpawnRigidCows(winSceneBull, i);
+//			} else if(rand == 1){
+//				SpawnRigidCows(winSceneCow, i);
+//			}
+//		}
+//	}
+//	
+//	void Repeater(){
+//		InvokeRepeating("WinScene", appearWaitTime * 5f, 0.4f);
+//	}
+//
+//	void SpawnRigidCows(GameObject cowBull, int step){
+//		float xPos = -258f;
+//		float yPos = 440f;
+//		float xSpacer = 80f;
+//		GameObject rigidCow = Instantiate(cowBull) as GameObject;
+//		rigidCow.transform.SetParent(gamePanel);
+//		rigidCow.transform.localScale = new Vector3(1f, 1f, 1f);
+//		rigidCow.transform.localPosition = new Vector3(xPos + (step * xSpacer), yPos, 0f);
+//		rigidCow.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 0f));
+//	}
 }
 
 
