@@ -22,9 +22,9 @@ public class GameController : MonoBehaviour {
 	public Sprite digitLimit;
 	public Text guesses;
 	public float appearWaitTime;
-	private float gameStartTime;
-	private float gameTimeTaken;
-	private int gameScore;
+//	private float gameStartTime;
+//	private float gameTimeTaken;
+//	private int gameScore;
 	private int codeLength;
 	private int numGuesses;
 	private int[] code;
@@ -141,8 +141,8 @@ public class GameController : MonoBehaviour {
 //This is a winning animation that has been disabled because it doesn't work on android with the current settings
 //			Repeater();
 			DisableButtons();
-			gameTimeTaken = Time.time - gameStartTime;
-			gameScore = 1000 - (numGuesses * 30) - (int)gameTimeTaken;
+//			gameTimeTaken = Time.time - gameStartTime;
+//			gameScore = 1000 - (numGuesses * 30) - (int)gameTimeTaken;
 		} else {
 			resultsString = " " + resultsString;
 		}
@@ -161,10 +161,11 @@ public class GameController : MonoBehaviour {
 		DestroyResults();
 		for(int i = 0; i < guessButtonList.Count; i++){
 			guessButtonList[i].digit.text = zero.ToString();
+			guessButtonList[i].upBtn.GetComponent<ButtonScript2>().SetValue(0);
 		}
 		numGuesses = 0;
 		guesses.text = string.Concat("Guesses: ", numGuesses);
-		gameStartTime = Time.time;
+//		gameStartTime = Time.time;
 	}
 
 	void DestroyResults(){
@@ -204,8 +205,8 @@ public class GameController : MonoBehaviour {
 			animName = string.Concat("BullAppear", Random.Range(1, 4));
 			resultImageInstance.GetComponent<Animator>().Play (animName);
 			audioPlayer.GetComponent<AudioPlayer>().PlayRandomMoo();
-			yield return new WaitForSeconds(5f);
-			Destroy(resultImageInstance.GetComponent<Animator>());
+			yield return new WaitForSeconds(1f);
+			//Destroy(resultImageInstance.GetComponent<Animator>());
 		} else {
 			GameObject resultImageInstance = Instantiate(resultCowPref) as GameObject;
 			resultImageInstance.transform.SetParent(panel);
@@ -214,11 +215,11 @@ public class GameController : MonoBehaviour {
 			animName = string.Concat("CowAppear", Random.Range(1, 4));
 			resultImageInstance.GetComponent<Animator>().Play (animName);
 			audioPlayer.GetComponent<AudioPlayer>().PlayRandomMoo();
-			yield return new WaitForSeconds(5f);
+			yield return new WaitForSeconds(1f);
 			Destroy(resultImageInstance.GetComponent<Animator>());
 		}
 	}
-//
+
 //	void WinScene(){
 //		DestroyResults();
 //		for(int i = 0; i < codeLength; i++){

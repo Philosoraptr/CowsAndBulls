@@ -35,4 +35,11 @@ public class ButtonScript2 : MonoBehaviour {
 		buttonImage.sprite = Resources.Load<Sprite>(spriteName);
 		//audioPlayer.PlayOneShot(clip);
 	}
+
+	public void SetValue(int Value){
+		string spriteName;
+		guessText.text = Value.ToString();
+		spriteName = "Images/Current/" + Value + " Button";
+		buttonImage.sprite = Resources.Load<Sprite>(spriteName);
+	}
 }
